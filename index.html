@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HISTORY 8 — История</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#243047}
+header{background:#fff;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #0001;gap:12px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:bold;color:#f07818}
+button{cursor:pointer;border:0;border-radius:10px;padding:13px 18px;font-weight:bold;font-size:14px}
+.primary{background:#f07818;color:white;width:100%}
+.primary:hover{background:#d9640b}
+nav{display:flex;gap:8px;padding:14px 5%;background:white;overflow-x:auto}
+nav button{background:#fff0e4;color:#c45b0a;white-space:nowrap}
+nav button.active{background:#f07818;color:white}
+.container{max-width:950px;width:92%;margin:25px auto}
+.card{background:white;padding:25px;border-radius:16px;margin-bottom:16px;box-shadow:0 4px 18px #1527440b;border:1px solid #e7ebf2}
+h1{font-size:30px}
+h2{font-size:23px}
+p,li{line-height:1.8;color:#566176}
+.accordion{width:100%;background:#fff2e7;color:#87400a;text-align:left;margin:6px 0;padding:17px}
+.content{display:none;padding:12px 16px}
+.content.open{display:block}
+input[type=text],input[type=tel]{width:100%;padding:14px;border:1px solid #d8deea;border-radius:9px;margin:8px 0 17px;font-size:16px}
+label.field{display:block;font-weight:bold;font-size:14px}
+.question{padding:20px 0;border-bottom:1px solid #e7ebf2}
+.answer{display:block;padding:10px;margin:8px 0;background:#f6f8fb;border-radius:8px}
+.hidden{display:none!important}
+.badge{display:inline-block;padding:7px 12px;background:#fff0e4;color:#c45b0a;border-radius:20px;font-size:12px;font-weight:bold}
+footer{text-align:center;padding:25px;color:#8791a2}
+.result{padding:20px;background:#eaf8ee;border-radius:12px;margin-top:18px}
+.error{color:#d22;margin-bottom:12px}
+@media(max-width:600px){h1{font-size:25px}.card{padding:19px}header{padding:15px}.logo{font-size:21px}}
+</style>
+</head>
+<body>
+
+<section id="loginScreen" class="container" style="max-width:440px;margin-top:7vh">
+ <div class="card">
+  <div class="logo" style="text-align:center;margin-bottom:20px">HISTORY 8 📚</div>
+  <h1 style="text-align:center">Добро пожаловать!</h1>
+  <p style="text-align:center">История для 8 класса. Кыргызстан.</p>
+  <div id="error" class="error"></div>
+  <form id="loginForm">
+   <label class="field" for="first">Имя</label>
+   <input id="first" type="text" placeholder="Твоё имя" required>
+   <label class="field" for="last">Фамилия</label>
+   <input id="last" type="text" placeholder="Твоя фамилия" required>
+   <label class="field" for="phone">WhatsApp учителя</label>
+   <input id="phone" type="tel" value="+996" required>
+   <button class="primary" type="submit">Войти в систему →</button>
+  </form>
+  <p style="font-size:12px">Данные сохраняются в этом браузере.</p>
+ </div>
+</section>
+
+<div id="app" class="hidden">
+<header>
+ <div class="logo">HISTORY 8 📚</div>
+ <div>Ученик: <b id="student"></b></div>
+</header>
+<nav>
+ <button class="active" data-page="home">Главная</button>
+ <button data-page="lessons">Учебные темы</button>
+ <button data-page="exam">Тест</button>
+ <button id="exit">Выйти</button>
+</nav>
+
+<main id="home" class="page container">
+ <div class="card">
+  <span class="badge">ИСТОРИЯ · 8 КЛАСС</span>
+  <h1>Изучай историю — <span style="color:#f07818">понимай мир!</span></h1>
+  <p>Изучай историю Азии, Африки и Европы XVII–XIX веков. Читай материалы, запоминай важные даты и проверяй знания с помощью теста.</p>
+  <button class="primary" style="max-width:250px" onclick="openPage('lessons')">Начать обучение →</button>
+ </div>
+ <div class="card">
+  <h2>Твоя программа</h2>
+  <p>📚 10 учебных тем</p>
+  <p>📝 10 тестовых вопросов</p>
+  <p>🏆 Автоматический подсчёт баллов</p>
+ </div>
+</main>
+
+<main id="lessons" class="page container hidden">
+ <h1>Учебные темы 📚</h1>
+ <p>Нажми на тему, чтобы открыть материал.</p>
+ <div id="lessonList"></div>
+</main>
+[02.11.2026 23:05] Нур Нур: <main id="exam" class="page container hidden">
+ <div class="card">
+  <h1>Экзаменационный тест 📝</h1>
+  <p>Вопросы 1–5: правильный ответ +5, неправильный −5. Вопросы 6–10: правильный +10, неправильный −8. Пропуск — 0.</p>
+  <p><b>Оценки:</b> 55 и выше — 5; 30–54 — 4; 5–29 — 3; меньше 5 — 2.</p>
+  <p>Не закрывай и не переключай вкладку во время теста: это приведёт к блокировке.</p>
+  <button id="startExam" class="primary">Начать тест</button>
+ </div>
+ <form id="testForm" class="card hidden">
+  <div id="questions"></div>
+  <button class="primary" type="submit">Завершить тест</button>
+ </form>
+ <div id="result" class="card hidden"></div>
+ <div id="cheat" class="card hidden" style="background:#ffe9e9;color:#b00020"></div>
+ <div class="card">
+  <h2>Журнал результатов</h2>
+  <div id="journal"></div>
+  <button id="export" style="background:#e9edf5">Скачать журнал</button>
+  <button id="clear" style="background:#ffe6e6;color:#b00020">Очистить журнал</button>
+ </div>
+</main>
+<footer>HISTORY 8 · Образовательная платформа</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+const $=id=>document.getElementById(id);
+const USER_KEY="history8_user_v2";
+const JOURNAL_KEY="history8_journal_v2";
+let user=null,started=false,finished=false,blocked=false;
+
+const lessons=[
+["Китай в XVII–XIX веках",`<h3>Династия Цин</h3><p>В 1644 году в Китае утвердилась маньчжурская династия Цин. Она правила до 1912 года. Государством управлял император, а чиновники опирались на традиции конфуцианства. В первые десятилетия правления территория империи расширилась.</p><h3>Изоляция</h3><p>Власти ограничивали иностранную торговлю и влияние европейцев. Основная торговля с иностранцами была сосредоточена в Гуанчжоу. Однако полностью от внешнего мира Китай изолирован не был.</p><h3>Опиумные войны</h3><p>В 1839–1842 годах произошла Первая Опиумная война между Китаем и Великобританией. После поражения Китай подписал Нанкинский договор 1842 года, открыл ряд портов для торговли и уступил Великобритании Гонконг. Вторая Опиумная война продолжалась в 1856–1860 годах. Великобритания и Франция добились новых уступок. В результате усилилось иностранное влияние и ослабла династия Цин.</p>`],
+["Индия в XVII–XIX веках",`<h3>Великие Моголы</h3><p>В XVII веке значительная часть Индии входила в империю Великих Моголов. При Аурангзебе (1658–1707) территория государства достигла больших размеров, но войны и внутренние противоречия ослабляли империю.</p><h3>Ост-Индская компания</h3><p>Английская Ост-Индская компания была создана в 1600 году для торговли. Постепенно она стала захватывать территории. В 1757 году англичане победили в битве при Плесси и укрепили влияние в Бенгалии.</p><h3>Восстание сипаев</h3><p>Восстание индийских солдат-сипаев началось в 1857 году. Его причинами стали колониальное угнетение, вмешательство в местные обычаи и недовольство политикой британцев. Восстание было подавлено в 1858 году. Управление Индией перешло непосредственно к британской короне.</p>`],
+["Япония в XVII–XIX веках",`<h3>Сёгунат Токугава</h3><p>В 1603 году Токугава Иэясу стал сёгуном. Реальная власть находилась у сёгуна, хотя император сохранял высокий символический статус. Столицей правительства был город Эдо, современный Токио.</p><h3>Эпоха Эдо и Сакоку</h3><p>Период 1603–1868 годов называется эпохой Эдо. Развивались города, торговля, образование и искусство. Политика Сакоку ограничивала контакты с иностранцами. Однако ограниченная торговля сохранялась, в частности в Нагасаки.</p><h3>Открытие Японии</h3><p>В 1853 году американская эскадра Мэттью Перри прибыла к японским берегам. Под давлением США Япония начала открывать порты для иностранной торговли.</p>`],
+["Япония в конце XIX — начале XX века",`<h3>Реставрация Мэйдзи</h3><p>В 1868 году произошла реставрация Мэйдзи: власть сёгуната закончилась, а император стал центром новой политической системы. Муцухито правил в 1867–1912 годах.</p><h3>Реформы</h3><p>Япония создала современную армию, развивала школы, железные дороги, фабрики и промышленность. Правительство изучало опыт европейских стран и США.
+[02.11.2026 23:05] Нур Нур: В 1889 году была принята конституция, а в 1890 году собрался парламент.</p><h3>Итоги</h3><p>К началу XX века Япония превратилась в современную промышленную державу и усилила влияние в Восточной Азии.</p>`],
+["Повторение стран Азии",`<h3>Китай</h3><p>Династия Цин правила с 1644 года. Опиумные войны XIX века усилили зависимость Китая от иностранных держав.</p><h3>Индия</h3><p>Империя Великих Моголов ослабла. Ост-Индская компания расширила власть, а после восстания сипаев Индия перешла под управление британской короны.</p><h3>Япония</h3><p>В эпоху Эдо страной фактически управляли сёгуны. После реставрации Мэйдзи 1868 года началась модернизация.</p><h3>Главное сравнение</h3><p>Китай и Индия столкнулись с сильным иностранным вмешательством, тогда как Япония провела реформы и смогла сохранить самостоятельность в период модернизации.</p>`],
+["Иран (Персия) в XVII–XIX веках",`<h3>Сефевиды</h3><p>В XVII веке Персией правила династия Сефевидов. При шахе Аббасе I государство укрепилось, а Исфахан стал важным культурным и торговым центром. В 1722 году Исфахан захватили афганские войска.</p><h3>Каджары</h3><p>В конце XVIII века к власти пришли Каджары. В XIX веке Персия вела войны с Россией. Гюлистанский договор был заключён в 1813 году, Туркманчайский — в 1828 году.</p><h3>Сферы влияния</h3><p>Россия и Великобритания соперничали за влияние в Персии. Англо-русское соглашение 1907 года разграничило сферы влияния этих держав, ограничив самостоятельность страны.</p>`],
+["Арабские страны в XVII–XIX веках",`<h3>Османская империя</h3><p>Значительные арабские территории, включая Сирию и Ирак, находились под властью Османской империи. В XIX веке империя испытывала внутренние трудности и давление европейских держав.</p><h3>Мухаммед Али</h3><p>Мухаммед Али стал правителем Египта в 1805 году. Он реформировал армию, управление и хозяйство, развивал промышленность и сельское хозяйство.</p><h3>Суэцкий канал</h3><p>Строительство канала началось в 1859 году, а открытие состоялось в 1869 году. Канал соединил Средиземное и Красное моря, сократив морской путь между Европой и Азией.</p>`],
+["Государства Африки в XVII–XIX веках",`<h3>Африканские общества</h3><p>В Африке существовали многочисленные государства и королевства со своими политическими системами, культурой и торговыми связями.</p><h3>Работорговля</h3><p>Атлантическая работорговля привела к насильственному вывозу миллионов африканцев в Америку. Это разрушало семьи и общества. В XIX веке многие государства запретили работорговлю, хотя она продолжалась нелегально.</p><h3>Битва при Адуа</h3><p>1 марта 1896 года эфиопская армия императора Менелика II победила итальянские войска при Адуа. Эта победа помогла Эфиопии сохранить независимость и стала символом сопротивления колониализму.</p>`],
+["Традиционная культура Европы",`<h3>Просвещение</h3><p>В XVII–XVIII веках мыслители выступали за разум, образование, науку и права человека. Среди известных представителей — Вольтер, Руссо, Монтескьё и Дидро.</p><h3>Барокко</h3><p>Барокко — стиль искусства XVII века, для которого характерны пышность, выразительность, сложные формы и богатые украшения.</p><h3>Классицизм</h3><p>Классицизм ориентировался на искусство Древней Греции и Рима. Его отличают симметрия, порядок, гармония и ясность. Эти направления оказали влияние на архитектуру, живопись, литературу и музыку.</p>`],
+["Наука и техника в XVII–XIX веках",`<h3>Научная революция</h3><p>В XVII веке учёные всё шире применяли наблюдения и эксперименты. Галилей развивал астрономию и физику, а Ньютон сформулировал законы механики и всемирного тяготения.</p><h3>Джеймс Уатт</h3><p>Шотландский инженер Джеймс Уатт усовершенствовал паровую машину в XVIII веке. Это сделало её более эффективной и пригодной для широкого применения.</p><h3>Промышленный переворот</h3><p>Промышленный переворот начался в Великобритании во второй половине XVIII века. Машинное производство заменяло ручной труд, росли фабрики и города, развивались железные дороги и торговля.</p>`]
+];
+ const questions=[
+{t:"Какая династия правила Китаем с 1644 года?",o:["Мин","Цин","Хань","Тан"],a:1},
+{t:"Какая английская организация усилила своё влияние в Индии?",o:["Ост-Индская компания","Лига Наций","Ганзейский союз","Орден иезуитов"],a:0},
+{t:"Кто основал сёгунат в 1603 году?",o:["Муцухито","Токугава Иэясу","Мэттью Перри","Менелик II"],a:1},
+{t:"В каком году началась реставрация Мэйдзи?",o:["1603","1757","1868","1896"],a:2},
+{t:"Как назывался период правления сёгуната Токугава?",o:["Эдо","Мэйдзи","Цин","Просвещение"],a:0},
+{t:"Какой договор Персия подписала с Россией в 1828 году?",o:["Нанкинский","Туркманчайский","Версальский","Тильзитский"],a:1},
+{t:"В каком году открылся Суэцкий канал?",o:["1805","1842","1869","1896"],a:2},
+{t:"Какое событие произошло в Эфиопии в 1896 году?",o:["Битва при Адуа","Первая Опиумная война","Реставрация Мэйдзи","Восстание сипаев"],a:0},
+{t:"Какой стиль искусства ориентировался на античную гармонию и симметрию?",o:["Барокко","Классицизм","Готика","Рококо"],a:1},
+{t:"Какое изобретение сыграло важную роль в промышленном перевороте?",o:["Паровая машина","Телефон","Радио","Самолёт"],a:0}
+];
+
+function showError(message){$("error").textContent=message}
+
+$("loginForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const first=$("first").value.trim();
+ const last=$("last").value.trim();
+ const phone=$("phone").value.trim();
+ if(first.length<2||last.length<2){showError("Введи имя и фамилию (минимум 2 символа).");return}
+ const digits=phone.replace(/\D/g,"");
+ if(digits.length<10||digits.length>15){showError("Проверь номер телефона. Например: +996 555 123 456");return}
+ user={first,last,phone};
+ try{localStorage.setItem(USER_KEY,JSON.stringify(user))}catch(err){}
+ showApp();
+});
+
+function showApp(){
+ $("loginScreen").classList.add("hidden");
+ $("app").classList.remove("hidden");
+ $("student").textContent=user.first+" "+user.last;
+ renderLessons();
+ renderJournal();
+}
+
+function logout(){
+ if(started&&!finished&&!blocked){if(!confirm("Выйти во время теста? Результат будет аннулирован."))return;blockExam("Ученик вышел во время экзамена.")}
+ try{localStorage.removeItem(USER_KEY)}catch(e){}
+ location.reload();
+}
+$("exit").addEventListener("click",logout);
+
+function openPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+ $(id).classList.remove("hidden");
+ document.querySelectorAll("nav button[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+}
+document.querySelectorAll("nav button[data-page]").forEach(b=>b.addEventListener("click",()=>openPage(b.dataset.page)));
+
+function renderLessons(){
+ $("lessonList").innerHTML=lessons.map((l,i)=>`
+ <section class="card">
+  <button class="accordion" type="button" aria-expanded="false">Тема ${i+1}. ${l[0]}　＋</button>
+  <div class="content">${l[1]}</div>
+ </section>`).join("");
+ $("lessonList").querySelectorAll(".accordion").forEach(b=>b.addEventListener("click",()=>{
+  const c=b.nextElementSibling,open=c.classList.toggle("open");
+  b.setAttribute("aria-expanded",String(open));
+  b.textContent=b.textContent.replace(/[＋－]$/,"")+(open?"－":"＋");
+ }));
+}
+
+function renderQuestions(){
+ $("questions").innerHTML=questions.map((q,i)=>`
+ <div class="question">
+ <h3>Вопрос ${i+1} ${i<5?"(лёгкий · 5 баллов)":"(сложный · 10 баллов)"}</h3>
+ <p>${q.t}</p>
+ ${q.o.map((v,j)=>`<label class="answer"><input type="radio" name="q${i}" value="${j}"> ${v}</label>`).join("")}
+ </div>`).join("");
+}
+
+$("startExam").addEventListener("click",()=>{
+ if(started||finished||blocked)return;
+ started=true;
+ $("startExam").classList.add("hidden");
+ $("testForm").classList.remove("hidden");
+ $("result").classList.add("hidden");
+ $("cheat").classList.add("hidden");
+ renderQuestions();
+});
+
+document.addEventListener("visibilitychange",()=>{
+ if(document.visibilityState==="hidden"&&user&&started&&!finished&&!blocked){
+  blockExam("Обнаружено переключение вкладки или сворачивание браузера.");
+ }
+});
+function blockExam(reason){
+ if(blocked||finished)return;
+ blocked=true;started=false;finished=true;
+ $("testForm").classList.add("hidden");
+ $("startExam").classList.add("hidden");
+ $("cheat").classList.remove("hidden");
+ $("cheat").innerHTML="<h2>🚨 ЭКЗАМЕН ЗАБЛОКИРОВАН</h2><p>"+reason+"</p><h2>Оценка: 1 (ЧИТЕР)</h2><p>Баллы аннулированы.</p>";
+ const r={name:user.first+" "+user.last,score:0,grade:"1 (ЧИТЕР)",correct:0,wrong:0,skipped:10,cheated:true,date:new Date().toLocaleString("ru-RU")};
+ saveResult(r);renderJournal();
+}
+
+$("testForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ if(!started||finished||blocked)return;
+ if(!confirm("Завершить тест? После отправки ответы нельзя изменить."))return;
+ let score=0,correct=0,wrong=0,skipped=0;
+ questions.forEach((q,i)=>{
+  const chosen=document.querySelector('input[name="q'+i+'"]:checked');
+  if(!chosen){skipped++;return}
+  if(Number(chosen.value)===q.a){correct++;score+=i<5?5:10}
+  else{wrong++;score+=i<5?-5:-8}
+ });
+ started=false;finished=true;
+ const grade=score>=55?"5":score>=30?"4":score>=5?"3":"2";
+ const r={name:user.first+" "+user.last,score,grade,correct,wrong,skipped,cheated:false,date:new Date().toLocaleString("ru-RU")};
+ saveResult(r);
+ $("testForm").classList.add("hidden");
+ $("result").classList.remove("hidden");
+ $("result").innerHTML=`<h2>Результат экзамена</h2><h1 style="color:#f07818">${score} баллов</h1><h2>Оценка: ${grade}</h2><p>Правильных: ${correct} · Неправильных: ${wrong} · Пропущено: ${skipped}</p><p>${r.name}<br>${r.date}</p><button id="send" class="primary">Отправить результат учителю в WhatsApp</button>`;
+ $("send").addEventListener("click",()=>sendWhatsApp(r));
+ renderJournal();
+});
+
+function getJournal(){
+ try{const j=JSON.parse(localStorage.getItem(JOURNAL_KEY)||"[]");return Array.isArray(j)?j:[]}catch(e){return []}
+}
+function saveResult(r){
+ const j=getJournal();j.unshift(r);
+ try{localStorage.setItem(JOURNAL_KEY,JSON.stringify(j))}catch(e){alert("Не удалось сохранить журнал браузера.")}
+}
+function renderJournal(){
+ if(!$("journal"))return;
+ const j=getJournal();
+ $("journal").innerHTML=j.length?j.map(r=>`<div style="padding:12px 0;border-bottom:1px solid #eee"><b>${escapeHTML(r.name)}</b><br><span style="color:#687386">${escapeHTML(r.date)} · ${r.score} баллов · Оценка ${escapeHTML(r.grade)}</span><br><button class="send-row" data-date="${escapeHTML(r.date)}" style="margin-top:8px;background:#e9edf5">Отчёт WhatsApp</button></div>`).join(""):"<p>Результатов пока нет.</p>";
+ $("journal").querySelectorAll(".send-row").forEach((b,i)=>b.addEventListener("click",()=>sendWhatsApp(j[i])));
+}
+function sendWhatsApp(r){
+ let phone=user.phone.replace(/\D/g,"");
+ const text=`HISTORY 8 — результат экзамена\nУченик: ${r.name}\nДата: ${r.date}\nБаллы: ${r.score}\nОценка: ${r.grade}\nПравильных: ${r.correct}\nНеправильных: ${r.wrong}\nПропущено: ${r.skipped}\n${r.cheated?"НАРУШЕНИЕ АНТИ-ЧИТА": "Экзамен завершён"}`;
+ window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(text),"_blank");
+}
+$("clear").addEventListener("click",()=>{
+ if(confirm("Очистить журнал на этом устройстве?")){
+  localStorage.removeItem(JOURNAL_KEY);renderJournal();
+ }
+});
+$("export").addEventListener("click",()=>{
+ const j=getJournal();
+ if(!j.length){alert("Журнал пуст.");return}
+ const csv=["Имя;Дата;Баллы;Оценка;Правильных;Неправильных;Пропущено;Нарушение",...j.map(r=>[r.name,r.date,r.score,r.grade,r.correct,r.wrong,r.skipped,r.cheated?"Да":"Нет"].map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";"))].join("\n");
+ const url=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}));
+ const a=document.createElement("a");a.href=url;a.download="history8-journal.csv";a.click();URL.revokeObjectURL(url);
+});
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+ try{
+ const saved=localStorage.getItem(USER_KEY);
+ if(saved){
+  const parsed=JSON.parse(saved);
+  if(parsed&&parsed.first&&parsed.last&&parsed.phone){user=parsed;showApp()}
+ }
+}catch(e){localStorage.removeItem(USER_KEY)}
+
+})();
+</script>
+</body>
+</html>
